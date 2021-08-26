@@ -21,6 +21,7 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL), // able history mode in the browser
   routes,
+  linkExactActiveClass: 'text-yellow-500' // link attivo color giallo
 });
 
 export default router;
