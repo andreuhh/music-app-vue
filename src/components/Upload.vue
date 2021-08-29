@@ -4,6 +4,7 @@
       <span class="card-title">Upload</span>
       <i class="fas fa-upload float-right text-green-400 text-2xl"></i>
     </div>
+    <!-- Upload Dropbox-->
     <div class="p-6">
       <div
         class="
@@ -21,10 +22,19 @@
           hover:bg-green-400
           hover:border-green-400 hover:border-solid
         "
+        :class="{ 'bg-green-400 border-green-400 border-solid': is_dragover }"
+        @drag.prevent.stop=""
+        @dragstart.prevent.stop=""
+        @dragend.prevent.stop="is_dragover = false"
+        @dragover.prevent.stop="is_dragover = true"
+        @dragenter.prevent.stop="is_dragover = true"
+        @dragleave.prevent.stop="is_dragover = false"
+        @drop.prevent.stop="upload"
       >
         <h5>Drop your files here</h5>
       </div>
       <hr class="my-6" />
+      <!-- Progress Bars -->
       <div class="mb-4">
         <div class="font-bold text-sm">Just another song.mp3</div>
         <div class="flex h-4 overflow-hidden bg-gray-200 rounded">
@@ -59,5 +69,15 @@
 <script>
 export default {
   name: "Upload",
+  data() {
+    return {
+      is_dragover: false,
+    };
+  },
+  methods: {
+    upload() {
+      this.is_dragover = false;
+    },
+  },
 };
 </script>
