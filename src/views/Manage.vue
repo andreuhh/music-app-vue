@@ -3,7 +3,7 @@
   <section class="container mx-auto mt-6">
     <div class="md:grid md:grid-cols-3 md:gap-4">
       <div class="col-span-1">
-        <app-upload />
+        <app-upload ref="upload" />
       </div>
       <div class="col-span-2">
         <div
@@ -252,6 +252,10 @@ export default {
   name: "manage",
   components: {
     AppUpload,
+  },
+  beforeRouteLeave(to, from, next) {
+    this.$refs.upload.cancelUploads();
+    next();
   },
   // beforeRouteEnter(to, from, next) {
   //   if (store.state.userLoggedIn) {
