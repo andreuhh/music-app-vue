@@ -33,6 +33,9 @@
       >
         <h5>Drop your files here</h5>
       </div>
+
+      <input type="file" multiple @change="upload($event)" />
+
       <hr class="my-6" />
       <!-- Progress Bars -->
       <div class="mb-4" v-for="upload in uploads" :key="upload.name">
@@ -66,7 +69,11 @@ export default {
   methods: {
     upload($event) {
       this.is_dragover = false;
-      const files = [...$event.dataTransfer.files]; // ...convert an object in an array
+
+      // check on dataTransfer to understand id file is uploaded whit dragndrop
+      const files = $event.dataTransfer
+        ? [...$event.dataTransfer.files]
+        : [...$event.target.files]; // ...convert an object in an array
 
       files.forEach((file) => {
         // DA DECOMMENTARE, ORA ACCETTA TUTTO
