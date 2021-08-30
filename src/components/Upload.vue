@@ -29,36 +29,22 @@
         @dragover.prevent.stop="is_dragover = true"
         @dragenter.prevent.stop="is_dragover = true"
         @dragleave.prevent.stop="is_dragover = false"
-        @drop.prevent.stop="upload"
+        @drop.prevent.stop="upload($event)"
       >
         <h5>Drop your files here</h5>
       </div>
       <hr class="my-6" />
       <!-- Progress Bars -->
-      <div class="mb-4">
-        <div class="font-bold text-sm">Just another song.mp3</div>
-        <div class="flex h-4 overflow-hidden bg-gray-200 rounded">
-          <div
-            class="transition-all progress-bar bg-blue-400"
-            style="width: 75%"
-          ></div>
+      <div class="mb-4" v-for="upload in uploads" :key="upload.name">
+        <div class="font-bold text-sm" :class="upload.text_class">
+          <i :class="upload.icon"></i>
+          {{ upload.name }}
         </div>
-      </div>
-      <div class="mb-4">
-        <div class="font-bold text-sm">Just another song.mp3</div>
         <div class="flex h-4 overflow-hidden bg-gray-200 rounded">
           <div
-            class="transition-all progress-bar bg-blue-400"
-            style="width: 35%"
-          ></div>
-        </div>
-      </div>
-      <div class="mb-4">
-        <div class="font-bold text-sm">Just another song.mp3</div>
-        <div class="flex h-4 overflow-hidden bg-gray-200 rounded">
-          <div
-            class="transition-all progress-bar bg-blue-400"
-            style="width: 55%"
+            class="transition-all progress-bar"
+            :class="upload.variant"
+            :style="{ width: upload.current_progress + '%' }"
           ></div>
         </div>
       </div>
@@ -67,16 +53,50 @@
 </template>
 
 <script>
+import { storage } from "@/includes/firebase";
+
 export default {
   name: "Upload",
   data() {
     return {
       is_dragover: false,
+      uploads: [],
     };
   },
   methods: {
-    upload() {
+    upload($event) {
       this.is_dragover = false;
+      const files = [...$event.dataTransfer.files]; // ...convert an object in an array
+
+      files.forEach((file) => {
+        // DA DECOMMENTARE, ORA ACCETTA TUTTO
+        // if (file.type !== "audio/mpeg") {
+        //   return;
+        // }
+
+        const storageRef = storage.ref(); // corrisponde a vue-music-app-b3506.appspot.com
+        const songsRef = storageRef.child(`songs/${file.name}`);
+        const task = songsRef.put(file);
+
+        const uploadIndex =
+          this.uploads.push({
+            task,
+            current_progress: 0,
+            name: file.name,
+            variant: "bg-blue-400",
+            icon: "fas fa-spinner fa-spin",
+            text_class: "",
+          }) - 1;
+
+        // .on() is a firebase method
+        task.on("state_changed", (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 200; // snapshot rapresent the current state of the upload
+          this.uploads[uploadIndex].current_progress = progress;
+        });
+      });
+
+      console.log(files);
     },
   },
 };
