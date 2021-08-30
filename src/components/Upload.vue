@@ -132,5 +132,11 @@ export default {
       console.log(files);
     },
   },
+  // cancel upload if user changes page
+  beforeUnmount() {
+    this.uploads.forEach((upload) => {
+      upload.task.cancel();
+    });
+  },
 };
 </script>
