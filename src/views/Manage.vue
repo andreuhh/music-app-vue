@@ -17,7 +17,11 @@
           </div>
           <div class="p-6">
             <!-- COMPOSITION ITEM -->
-            <composition-item v-for="song in songs" :key="song.docID" />
+            <composition-item
+              v-for="song in songs"
+              :key="song.docID"
+              :song="song"
+            />
           </div>
         </div>
       </div>
@@ -53,6 +57,7 @@ export default {
         docID: document.id,
       };
       this.songs.push(song);
+      console.log(song);
     });
   },
   beforeRouteLeave(to, from, next) {
