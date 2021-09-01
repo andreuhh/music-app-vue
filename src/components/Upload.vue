@@ -66,6 +66,7 @@ export default {
       uploads: [],
     };
   },
+  props: ["addSong"],
   methods: {
     upload($event) {
       this.is_dragover = false;
@@ -120,7 +121,12 @@ export default {
             };
 
             song.url = await task.snapshot.ref.getDownloadURL();
-            await songsCollection.add(song);
+            const songRef = await songsCollection.add(song);
+            // transform songRef in a snapshot
+            const songSnapshot = await songRef.get();
+
+            // passo il valore di songRef a Manage.vue
+            this.addSong(songSnapshot);
 
             this.uploads[uploadIndex].variant = "bg-green-400";
             this.uploads[uploadIndex].icon = "fas fa-check";
