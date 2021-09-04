@@ -1,7 +1,7 @@
 import { createStore } from 'vuex';
 import { auth, usersCollection } from "../includes/firebase";
 import {Howl} from 'howler';
-
+import helper from '../includes/helper';
 
 export default createStore({
   state: {
@@ -27,8 +27,8 @@ export default createStore({
       });
     },
     updatePosition(state) {
-      state.seek = state.sound.seek();
-      state.duration = state.sound.duration();
+      state.seek = helper.formatTime(state.sound.seek());
+      state.duration = helper.formatTime(state.sound.duration());
     }
   },
   // getters are the equivalent to computed properties for the state
