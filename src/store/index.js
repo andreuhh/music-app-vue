@@ -9,6 +9,8 @@ export default createStore({
     userLoggedIn: false,
     currentSong: {},
     sound: {},
+    seek: '00:00',
+    duration: '00:00'
   },
   mutations: {
     toggleAuthModal: (state) => {
@@ -23,6 +25,10 @@ export default createStore({
         src: [payload.url],
         html5: true,
       });
+    },
+    updatePosition(state) {
+      state.seek = state.sound.seek();
+      state.duration = state.sound.duration();
     }
   },
   // getters are the equivalent to computed properties for the state
@@ -73,9 +79,16 @@ export default createStore({
       //   payload.router.push({ name: "home" });
       // }
     },
-    async newSong({commit, state}, payload) {
+    async newSong({commit, state, dispatch}, payload) {
+
       commit('newSong', payload);
       state.sound.play();
+      state.sound.on('play', () => {
+        // progress bar animation
+        requestAnimationFrame(() => {
+          dispatch('progress');
+        });
+      });
     },
     async toggleAudio({state}){
       if (!state.sound.playing){
@@ -88,5 +101,15 @@ export default createStore({
         state.sound.play();
       }
     },
+    // progress bar animation
+    progress({commit, state, dispatch}) {
+      commit('updatePosition');
+
+      if(state.sound.playing()){
+        requestAnimationFrame(() => {
+          dispatch('progress');
+        })
+      }
+    }
   },
 });
