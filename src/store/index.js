@@ -25,8 +25,15 @@ export default createStore({
       });
     }
   },
+  // getters are the equivalent to computed properties for the state
   getters: {
     // authModalShow: (state) => state.authModalShow,
+    playing: (state) => {
+      if(state.sound.playing){
+        return state.sound.playing();
+      }
+      return false;
+    }
   },
   actions: {
     async register({commit}, payload){
@@ -68,7 +75,18 @@ export default createStore({
     },
     async newSong({commit, state}, payload) {
       commit('newSong', payload);
-      this.state.sound.play();
-    }
+      state.sound.play();
+    },
+    async toggleAudio({state}){
+      if (!state.sound.playing){
+        return;
+      }
+
+      if(state.sound.playing()){
+        state.sound.pause();
+      } else {
+        state.sound.play();
+      }
+    },
   },
 });
