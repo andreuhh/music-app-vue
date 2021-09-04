@@ -44,6 +44,7 @@
       <!-- Scrub -->
       <div class="float-left w-7 h-7 leading-3 ml-7 mt-2 player-scrub">
         <div
+          v-if="currentSong.modified_name"
           class="
             absolute
             left-0
@@ -53,8 +54,8 @@
             player-song-info
           "
         >
-          <span class="song-title">Song Title</span> by
-          <span class="song-artist">Artist</span>
+          <span class="song-title">{{ currentSong.modified_name }}</span> by
+          <span class="song-artist">{{ currentSong.display_name }}</span>
         </div>
         <span
           class="
@@ -69,13 +70,15 @@
             cursor-pointer
           "
         >
+          <!-- Player circle -->
           <span
             class="absolute top-neg-8 text-gray-800 text-lg"
-            style="left: 50%"
+            :style="{ left: playerProgress }"
           >
             <i class="fas fa-circle"></i>
           </span>
           <span
+            :style="{ width: playerProgress }"
             class="
               block
               h-2
@@ -116,7 +119,7 @@ export default {
   name: "Player",
   computed: {
     ...mapGetters(["playing"]),
-    ...mapState(["seek", "duration"]),
+    ...mapState(["seek", "duration", "playerProgress", "currentSong"]),
   },
   methods: {
     ...mapActions(["toggleAudio"]),
