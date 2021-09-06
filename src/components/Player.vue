@@ -58,6 +58,7 @@
           <span class="song-artist">{{ currentSong.display_name }}</span>
         </div>
         <span
+          @click.prevent="updateSeek"
           class="
             block
             w-full
@@ -122,7 +123,7 @@ export default {
     ...mapState(["seek", "duration", "playerProgress", "currentSong"]),
   },
   methods: {
-    ...mapActions(["toggleAudio"]),
+    ...mapActions(["toggleAudio", "updateSeek"]),
   },
 };
 </script>

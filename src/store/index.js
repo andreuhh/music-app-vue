@@ -116,6 +116,26 @@ export default createStore({
           dispatch('progress');
         })
       }
-    }
+    },
+    // current audio position
+    updateSeek({state, dispatch}, payload) {
+
+      if(!this.state.sound.playing){
+        return;
+      }
+      const { x, width } = payload.currentTarget.getBoundingClientRect();
+
+      const clickX = payload.clientX - x;
+      const percentage = clickX / width;
+      const seconds = state.sound.duration() * percentage;
+
+      // get current position
+      state.sound.seek(seconds);
+
+      // once() --> the function runs only one time
+      state.sound.once('seek', () => {
+        dispatch('progress');
+      });
+    },
   },
 });
