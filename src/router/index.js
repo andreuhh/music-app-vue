@@ -18,7 +18,7 @@ const routes = [
   },
   {
     name: 'manage',
-    //alias: '/manage',
+    // alias: '/manage',
     path: '/manage-music',
     meta: {
       requiresAuth: true,
@@ -30,40 +30,39 @@ const routes = [
   },
   {
     path: '/manage',
-    redirect: {name: 'manage'},
+    redirect: { name: 'manage' },
   },
   {
     name: 'song',
     path: '/song/:id',
-    component: Song
+    component: Song,
   },
   {
     path: '/:catchAll(.*)*', // gestione errore
-    redirect: {name: 'home'}
-  }
+    redirect: { name: 'home' },
+  },
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL), // able history mode in the browser
   routes,
-  linkExactActiveClass: 'text-yellow-500' // link attivo color giallo
+  linkExactActiveClass: 'text-yellow-500', // link attivo color giallo
 });
 
 // GUARDS
- router.beforeEach((to, from, next) => {
-  //console.log(to.matched);
+router.beforeEach((to, from, next) => {
+  // console.log(to.matched);
 
-  if(!to.matched.some((record) => record.meta.requiresAuth)){
+  if (!to.matched.some((record) => record.meta.requiresAuth)) {
     next();
     return;
   }
 
-  if(store.state.userLoggedIn){
+  if (store.state.userLoggedIn) {
     next();
   } else {
-    next({name: 'home'});
+    next({ name: 'home' });
   }
-
- });
+});
 
 export default router;

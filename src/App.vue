@@ -12,19 +12,19 @@
 </template>
 
 <script>
-import AppPlayer from "@/components/Player.vue";
-import AppHeader from "./components/Header.vue";
-import AuthModal from "./components/Auth.vue";
+import AppPlayer from '@/components/Player.vue';
+import AppHeader from './components/Header.vue';
+import AuthModal from './components/Auth.vue';
 
 export default {
-  name: "App",
+  name: 'App',
   components: {
     AppHeader,
     AuthModal,
     AppPlayer,
   },
   created() {
-    this.$store.dispatch("init_login");
+    this.$store.dispatch('init_login');
   },
 };
 </script>

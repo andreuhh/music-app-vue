@@ -1,5 +1,5 @@
 export default {
-  formatTime(time){
+  formatTime(time) {
     const minutes = Math.floor(time / 60) || 0;
     const seconds = Math.round((time - minutes * 60) || 0);
 

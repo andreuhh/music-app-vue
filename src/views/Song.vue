@@ -26,6 +26,7 @@
         <div class="z-50 text-left ml-8">
           <div class="text-3xl font-bold">{{ song.modified_name }}</div>
           <div>{{ song.genre }}</div>
+          <div class="song-price">{{ $n(1, "currency", "ja") }}</div>
         </div>
       </div>
     </section>
@@ -156,7 +157,7 @@ export default {
   async created() {
     const docSnapshot = await songsCollection.doc(this.$route.params.id).get();
 
-    //redirect to home if song doesn't exist
+    // redirect to home if song doesn't exist
     if (!docSnapshot.exists) {
       this.$router.push({ name: "home" });
       return;

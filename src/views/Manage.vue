@@ -34,13 +34,13 @@
 </template>
 
 <script>
-//import store from "@/store";
-import AppUpload from "@/components/Upload.vue";
-import CompositionItem from "@/components/CompositionItem.vue";
-import { songsCollection, auth } from "@/includes/firebase";
+// import store from "@/store";
+import AppUpload from '@/components/Upload.vue';
+import CompositionItem from '@/components/CompositionItem.vue';
+import { songsCollection, auth } from '@/includes/firebase';
 
 export default {
-  name: "manage",
+  name: 'manage',
   components: {
     AppUpload,
     CompositionItem,
@@ -53,7 +53,7 @@ export default {
   },
   async created() {
     const snapshot = await songsCollection
-      .where("uid", "==", auth.currentUser.uid)
+      .where('uid', '==', auth.currentUser.uid)
       .get();
 
     snapshot.forEach(this.addSong);
@@ -83,17 +83,17 @@ export default {
       next();
     } else {
       const leave = confirm(
-        "You have unsaved changes. Are you sure you want to leave?"
+        'You have unsaved changes. Are you sure you want to leave?',
       );
       next(leave);
     }
   },
 
-  //beforeRouteLeave(to, from, next) {
+  // beforeRouteLeave(to, from, next) {
   // this.$refs.upload.cancelUploads();
   // next();
 
-  //},
+  // },
   // beforeRouteEnter(to, from, next) {
   //   if (store.state.userLoggedIn) {
   //     next();

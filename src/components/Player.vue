@@ -114,16 +114,16 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from "vuex";
+import { mapActions, mapGetters, mapState } from 'vuex';
 
 export default {
-  name: "Player",
+  name: 'Player',
   computed: {
-    ...mapGetters(["playing"]),
-    ...mapState(["seek", "duration", "playerProgress", "currentSong"]),
+    ...mapGetters(['playing']),
+    ...mapState(['seek', 'duration', 'playerProgress', 'currentSong']),
   },
   methods: {
-    ...mapActions(["toggleAudio", "updateSeek"]),
+    ...mapActions(['toggleAudio', 'updateSeek']),
   },
 };
 </script>

@@ -1,6 +1,6 @@
 import { createStore } from 'vuex';
-import { auth, usersCollection } from "../includes/firebase";
-import {Howl} from 'howler';
+import { Howl } from 'howler';
+import { auth, usersCollection } from '../includes/firebase';
 import helper from '../includes/helper';
 
 export default createStore({
@@ -30,21 +30,21 @@ export default createStore({
     updatePosition(state) {
       state.seek = helper.formatTime(state.sound.seek());
       state.duration = helper.formatTime(state.sound.duration());
-      state.playerProgress = `${(state.sound.seek() / state.sound.duration())*100}%`;
-    }
+      state.playerProgress = `${(state.sound.seek() / state.sound.duration()) * 100}%`;
+    },
   },
   // getters are the equivalent to computed properties for the state
   getters: {
     // authModalShow: (state) => state.authModalShow,
     playing: (state) => {
-      if(state.sound.playing){
+      if (state.sound.playing) {
         return state.sound.playing();
       }
       return false;
-    }
+    },
   },
   actions: {
-    async register({commit}, payload){
+    async register({ commit }, payload) {
       const userCred = await auth.createUserWithEmailAndPassword(
         payload.email,
         payload.password,
@@ -61,27 +61,27 @@ export default createStore({
         displayName: payload.name,
       });
 
-      commit("toggleAuth");
-    },
-
-    async login({commit}, payload){
-      await  auth.signInWithEmailAndPassword(payload.email, payload.password);
       commit('toggleAuth');
     },
-    init_login({commit}){
+
+    async login({ commit }, payload) {
+      await auth.signInWithEmailAndPassword(payload.email, payload.password);
+      commit('toggleAuth');
+    },
+    init_login({ commit }) {
       const user = auth.currentUser;
-      if(user){
+      if (user) {
         commit('toggleAuth');
       }
     },
-    async signout({commit}){
+    async signout({ commit }) {
       await auth.signOut();
       commit('toggleAuth');
       // if (payload.route.meta.requiresAuth) {
       //   payload.router.push({ name: "home" });
       // }
     },
-    async newSong({commit, state, dispatch}, payload) {
+    async newSong({ commit, state, dispatch }, payload) {
       // unable to play multiple song
       if (state.sound instanceof Howl) {
         state.sound.unload();
@@ -96,31 +96,30 @@ export default createStore({
         });
       });
     },
-    async toggleAudio({state}){
-      if (!state.sound.playing){
+    async toggleAudio({ state }) {
+      if (!state.sound.playing) {
         return;
       }
 
-      if(state.sound.playing()){
+      if (state.sound.playing()) {
         state.sound.pause();
       } else {
         state.sound.play();
       }
     },
     // progress bar animation
-    progress({commit, state, dispatch}) {
+    progress({ commit, state, dispatch }) {
       commit('updatePosition');
 
-      if(state.sound.playing()){
+      if (state.sound.playing()) {
         requestAnimationFrame(() => {
           dispatch('progress');
-        })
+        });
       }
     },
     // current audio position
-    updateSeek({state, dispatch}, payload) {
-
-      if(!this.state.sound.playing){
+    updateSeek({ state, dispatch }, payload) {
+      if (!this.state.sound.playing) {
         return;
       }
       const { x, width } = payload.currentTarget.getBoundingClientRect();
