@@ -56,17 +56,17 @@
 </template>
 
 <script>
-import { storage, auth, songsCollection } from '@/includes/firebase';
+import { storage, auth, songsCollection } from "@/includes/firebase";
 
 export default {
-  name: 'Upload',
+  name: "Upload",
   data() {
     return {
       is_dragover: false,
       uploads: [],
     };
   },
-  props: ['addSong'],
+  props: ["addSong"],
   methods: {
     upload($event) {
       this.is_dragover = false;
@@ -82,30 +82,44 @@ export default {
         //   return;
         // }
 
+        if (!navigator.onLine) {
+          this.uploads.push({
+            task: {},
+            current_progress: 100,
+            name: file.name,
+            variant: "bg-red-400",
+            icon: "fas fa-times",
+            text_class: "text-red-400",
+          });
+          return;
+        }
+
         const storageRef = storage.ref(); // corrisponde a vue-music-app-b3506.appspot.com
         const songsRef = storageRef.child(`songs/${file.name}`);
         const task = songsRef.put(file);
 
-        const uploadIndex = this.uploads.push({
-          task,
-          current_progress: 0,
-          name: file.name,
-          variant: 'bg-blue-400',
-          icon: 'fas fa-spinner fa-spin',
-          text_class: '',
-        }) - 1;
+        const uploadIndex =
+          this.uploads.push({
+            task,
+            current_progress: 0,
+            name: file.name,
+            variant: "bg-blue-400",
+            icon: "fas fa-spinner fa-spin",
+            text_class: "",
+          }) - 1;
 
         // .on() is a firebase method
         task.on(
-          'state_changed',
+          "state_changed",
           (snapshot) => {
-            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 200; // snapshot rapresent the current state of the upload
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 200; // snapshot rapresent the current state of the upload
             this.uploads[uploadIndex].current_progress = progress;
           },
           (error) => {
-            this.uploads[uploadIndex].variant = 'bg-red-400';
-            this.uploads[uploadIndex].icon = 'fas fa-times';
-            this.uploads[uploadIndex].text_class = 'text-red-400';
+            this.uploads[uploadIndex].variant = "bg-red-400";
+            this.uploads[uploadIndex].icon = "fas fa-times";
+            this.uploads[uploadIndex].text_class = "text-red-400";
             console.log(error);
           },
           async () => {
@@ -114,7 +128,7 @@ export default {
               display_name: auth.currentUser.displayName,
               original_name: task.snapshot.ref.name,
               modified_name: task.snapshot.ref.name,
-              genre: '',
+              genre: "",
               comment_count: 0,
             };
 
@@ -126,10 +140,10 @@ export default {
             // passo il valore di songRef a Manage.vue
             this.addSong(songSnapshot);
 
-            this.uploads[uploadIndex].variant = 'bg-green-400';
-            this.uploads[uploadIndex].icon = 'fas fa-check';
-            this.uploads[uploadIndex].text_class = 'text-green-400';
-          },
+            this.uploads[uploadIndex].variant = "bg-green-400";
+            this.uploads[uploadIndex].icon = "fas fa-check";
+            this.uploads[uploadIndex].text_class = "text-green-400";
+          }
         );
       });
 
