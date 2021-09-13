@@ -53,30 +53,32 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapMutations, mapState } from "vuex";
 
 export default {
-  name: 'Header',
+  name: "Header",
   computed: {
-    ...mapState(['userLoggedIn']),
+    ...mapState({
+      userLoggedIn: (state) => state.auth.userLoggedIn,
+    }),
     currentLocale() {
-      return this.$i18n.locale === 'fr' ? 'French' : 'English';
+      return this.$i18n.locale === "fr" ? "French" : "English";
     },
   },
   methods: {
-    ...mapMutations(['toggleAuthModal']),
+    ...mapMutations(["toggleAuthModal"]),
     signout() {
-      this.$store.dispatch('signout', {
+      this.$store.dispatch("signout", {
         router: this.$router,
         route: this.$route,
       });
       // console.log(this.$route);
       if (this.$route.meta.requiresAuth) {
-        this.$router.push({ name: 'home' });
+        this.$router.push({ name: "home" });
       }
     },
     changeLocale() {
-      this.$i18n.locale = this.$i18n.locale === 'fr' ? 'en' : 'fr';
+      this.$i18n.locale = this.$i18n.locale === "fr" ? "en" : "fr";
     },
 
     // toggleAuthModal() {

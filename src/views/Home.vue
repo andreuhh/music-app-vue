@@ -17,6 +17,8 @@
             suscipit ac aliquet imperdiet, venenatis et sapien. Duis sed magna
             pulvinar, fringilla lorem eget, ullamcorper urna.
           </p>
+
+          <base-button />
         </div>
       </div>
 
@@ -49,17 +51,17 @@
 </template>
 
 <script>
-import { songsCollection } from '@/includes/firebase';
-import AppSongItem from '@/components/SongItem.vue';
-import IconSecondary from '@/directives/icon-secondary';
+import { songsCollection } from "@/includes/firebase";
+import AppSongItem from "@/components/SongItem.vue";
+import IconSecondary from "@/directives/icon-secondary";
 
 export default {
-  name: 'Home',
+  name: "Home",
   components: {
     AppSongItem,
   },
   directives: {
-    'icon-secondary': IconSecondary,
+    "icon-secondary": IconSecondary,
   },
   data() {
     return {
@@ -70,17 +72,18 @@ export default {
   },
   async created() {
     this.getSongs();
-    window.addEventListener('scroll', this.handleScroll);
+    window.addEventListener("scroll", this.handleScroll);
   },
   beforeUnmount() {
     // remove event listener on scroll
-    window.removeEventListener('scroll', this.handleScroll);
+    window.removeEventListener("scroll", this.handleScroll);
   },
   methods: {
     handleScroll() {
       const { scrollTop, offsetHeight } = document.documentElement;
       const { innerHeight } = window;
-      const bottomOfWindow = Math.round(scrollTop) + innerHeight === offsetHeight;
+      const bottomOfWindow =
+        Math.round(scrollTop) + innerHeight === offsetHeight;
 
       if (bottomOfWindow) {
         this.getSongs();
@@ -100,14 +103,14 @@ export default {
           .doc(this.songs[this.songs.length - 1].docID)
           .get();
         snapshots = await songsCollection
-          .orderBy('modified_name')
+          .orderBy("modified_name")
           .startAfter(lastDoc)
           .limit(this.maxPerPage)
           .get();
       } else {
         // don't use startAfter(lastDoc). if user visit page at first time
         snapshots = await songsCollection
-          .orderBy('modified_name')
+          .orderBy("modified_name")
           .limit(this.maxPerPage)
           .get();
       }

@@ -123,31 +123,33 @@
 </template>
 
 <script>
-import { songsCollection, auth, commentsCollection } from '@/includes/firebase';
-import { mapState, mapActions } from 'vuex';
+import { songsCollection, auth, commentsCollection } from "@/includes/firebase";
+import { mapState, mapActions } from "vuex";
 
 export default {
-  name: 'Song',
+  name: "Song",
   data() {
     return {
       song: {},
       schema: {
-        comment: 'required|min:3',
+        comment: "required|min:3",
       },
       comment_in_submission: false,
       comment_show_alert: false,
-      comment_alert_variant: 'bg-blue-500',
-      comment_alert_message: 'Please wait! Your comment is being submitted',
+      comment_alert_variant: "bg-blue-500",
+      comment_alert_message: "Please wait! Your comment is being submitted",
       comments: [],
-      sort: '1', // 1 --> descending order
+      sort: "1", // 1 --> descending order
     };
   },
   computed: {
     // solo gli utenti loggati possono lasciare commenti
-    ...mapState(['userLoggedIn']),
+    ...mapState({
+      userLoggedIn: (state) => state.auth.userLoggedIn,
+    }),
     sortedComments() {
       return this.comments.slice().sort((a, b) => {
-        if (this.sort === '1') {
+        if (this.sort === "1") {
           return new Date(b.datePosted) - new Date(a.datePosted);
         }
         return new Date(a.datePosted) - new Date(b.datePosted);
@@ -159,24 +161,25 @@ export default {
 
     // redirect to home if song doesn't exist
     if (!docSnapshot.exists) {
-      this.$router.push({ name: 'home' });
+      this.$router.push({ name: "home" });
       return;
     }
 
     // mantengo il valore per riordinare i commenti
     const { sort } = this.$route.query;
-    this.sort = sort === '1' || sort === '2' ? sort : '1';
+    this.sort = sort === "1" || sort === "2" ? sort : "1";
 
     this.song = docSnapshot.data();
     this.getComments();
   },
   methods: {
-    ...mapActions(['newSong']),
+    ...mapActions(["newSong"]),
     async addComment(values, { resetForm }) {
       this.comment_in_submission = true;
       this.comment_show_alert = true;
-      this.comment_alert_variant = 'bg-blue-500';
-      this.comment_alert_message = 'Please wait! Your comment is being submitted';
+      this.comment_alert_variant = "bg-blue-500";
+      this.comment_alert_message =
+        "Please wait! Your comment is being submitted";
 
       const comment = {
         content: values.comment,
@@ -196,14 +199,14 @@ export default {
       this.getComments();
 
       this.comment_in_submission = false;
-      this.comment_alert_variant = 'bg-green-500';
-      this.comment_alert_message = 'Comment added!';
+      this.comment_alert_variant = "bg-green-500";
+      this.comment_alert_message = "Comment added!";
 
       resetForm();
     },
     async getComments() {
       const snapshots = await commentsCollection
-        .where('sid', '==', this.$route.params.id)
+        .where("sid", "==", this.$route.params.id)
         .get();
       this.comments = [];
       snapshots.forEach((doc) => [
